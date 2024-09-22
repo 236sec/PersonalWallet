@@ -4,6 +4,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from './entities/user.entity';
+import { Role } from './entities/user.entity';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UsersService {
@@ -11,8 +13,12 @@ export class UsersService {
     @InjectModel(User.name)
     private userModel: Model<UserDocument>,
   ) {}
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const user = plainToInstance(User, createUserDto);
+    user.roles = [Role.Customer];
+    const createdUser = new this.userModel(user);
+    return createdUser.save();
   }
 
   async findByEmail(email: string): Promise<User | undefined> {
