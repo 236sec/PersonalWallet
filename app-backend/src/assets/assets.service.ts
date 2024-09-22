@@ -3,13 +3,13 @@ import { CreateAssetDto } from './dto/create-asset.dto';
 import { UpdateAssetDto } from './dto/update-asset.dto';
 
 @Injectable()
-export class AssetService {
+export class AssetsService {
   create(createAssetDto: CreateAssetDto) {
     return 'This action adds a new asset';
   }
 
   findAll() {
-    return `This action returns all asset`;
+    return `This action returns all assets`;
   }
 
   findOne(id: number) {

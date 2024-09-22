@@ -3,13 +3,13 @@ import { CreateWalletDto } from './dto/create-wallet.dto';
 import { UpdateWalletDto } from './dto/update-wallet.dto';
 
 @Injectable()
-export class WalletService {
+export class WalletsService {
   create(createWalletDto: CreateWalletDto) {
     return 'This action adds a new wallet';
   }
 
   findAll() {
-    return `This action returns all wallet`;
+    return `This action returns all wallets`;
   }
 
   findOne(id: number) {
