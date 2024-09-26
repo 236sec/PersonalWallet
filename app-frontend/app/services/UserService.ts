@@ -11,7 +11,7 @@ export async function registerUser({
   firstName: string;
   lastName: string;
 }): Promise<any | null> {
-  const res = await fetch(`http://localhost:3000/users/register`, {
+  const res = await fetch(`${process.env.BASE_URL}/users/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -36,7 +36,7 @@ export async function loginUser({
   email: string;
   password: string;
 }): Promise<any | null> {
-  const res = await fetch(`http://localhost:3000/auth/login`, {
+  const res = await fetch(`${process.env.BASE_URL}/auth/login`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
@@ -53,7 +53,7 @@ export async function loginUser({
 }
 
 export async function getProfile() {
-  const res = await fetch(`http://localhost:3000/users/profile`, {
+  const res = await fetch(`${process.env.BASE_URL}/users/profile`, {
     method: "GET",
     credentials: "include",
     headers: { "Content-Type": "application/json" },

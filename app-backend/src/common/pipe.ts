@@ -3,7 +3,7 @@ import { Types } from 'mongoose';
 import { ObjectId } from 'mongodb';
 
 @Injectable()
-export class ParseObjectIdPipe implements PipeTransform<any, Types.ObjectId> {
+export class ParseObjectIdPipe implements PipeTransform<any, ObjectId> {
   public transform(value: any): ObjectId {
     try {
       const transformedObjectId: ObjectId = new Types.ObjectId(
