@@ -7,11 +7,16 @@ import { Roles } from 'src/auth/roles/roles.decorator';
 import { Role } from './entities/user.entity';
 import { RolesGuard } from 'src/auth/roles/role.guard';
 import { ApiTags } from '@nestjs/swagger';
+import { WalletsService } from 'src/wallets/wallets.service';
+import { Types } from 'mongoose';
 
 @ApiTags('User')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly walletService: WalletsService,
+  ) {}
 
   @Post('register')
   register(@Body() createUserDto: CreateUserDto) {
@@ -29,5 +34,13 @@ export class UsersController {
   getProfile(@Request() req) {
     const user = this.usersService.findByEmail(req.user.email);
     return user;
+  }
+
+  @Roles(Role.Customer)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Get('wallet')
+  getWallet(@Request() req) {
+    const userId = new Types.ObjectId(req.user._id);
+    return this.walletService.findByOwnerId(userId);
   }
 }
