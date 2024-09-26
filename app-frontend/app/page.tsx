@@ -3,18 +3,33 @@ import Image from "next/image";
 import Link from "next/link";
 import WalletForm from "./component/WalletForm";
 import { useEffect, useState } from "react";
+import Button from "@mui/material/Button";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+
+interface Wallet {
+  _id: string;
+  name: string;
+}
 
 export default function Home() {
-  const [wallets, setWallets] = useState([]);
+  const [wallets, setWallets] = useState<Wallet[]>([]);
+  const [selectedWallet, setSelectedWallet] = useState("");
+
+  const handleChange = (event: SelectChangeEvent) => {
+    console.log(event.target.value as string);
+    setSelectedWallet(event.target.value as string);
+  };
+
   const fetchWallet = async () => {
     const res = await fetch("http://localhost:3000/users/wallet", {
       credentials: "include",
     });
     const data = await res.json();
-    if (data) {
-      console.log("Have wallet", data.length);
-      setWallets(data);
-    }
+    console.log("Have wallet", data.length);
+    setWallets(Array.isArray(data) ? data : []);
   };
 
   useEffect(() => {
@@ -22,14 +37,34 @@ export default function Home() {
   }, []);
   return (
     <div>
-      <Link href={"/register"}>Register</Link>
-      <Link href={"/login"}>Login</Link>
+      <Link href={"/register"}>
+        <Button variant="contained">Register</Button>
+      </Link>
+      <Link href={"/login"}>
+        <Button variant="contained">Login</Button>
+      </Link>
       <WalletForm />
-      <ul>
-        {wallets.map((wallet, ind) => {
-          return <li key={ind}>{wallet.name}</li>;
-        })}
-      </ul>
+      <Link href={"/createwallet"}>
+        <Button variant="contained">Create Wallet</Button>
+      </Link>
+      <FormControl fullWidth>
+        <InputLabel id="selectedWallet">Wallet</InputLabel>
+        <Select
+          labelId="selectedWallet"
+          id="selectedWallet"
+          value={selectedWallet}
+          label="selectedWallet"
+          onChange={handleChange}
+        >
+          {wallets.map((wallet, ind) => {
+            return (
+              <MenuItem key={ind} value={wallet._id}>
+                {wallet.name}
+              </MenuItem>
+            );
+          })}
+        </Select>
+      </FormControl>
     </div>
   );
 }

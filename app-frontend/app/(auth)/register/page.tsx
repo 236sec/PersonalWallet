@@ -2,13 +2,14 @@
 import React from "react";
 import { Formik } from "formik";
 import { registerUser } from "@/app/services/UserService";
+import { TextField, Button } from "@mui/material";
 
 type Props = {};
 
 const RegisterPager = (props: Props) => {
   return (
     <div>
-      <h1>RegisterPager</h1>
+      <h1>Register Page</h1>
       <Formik
         initialValues={{
           email: "",
@@ -58,52 +59,78 @@ const RegisterPager = (props: Props) => {
           handleBlur,
           handleSubmit,
           isSubmitting,
-          /* and other goodies */
         }) => (
           <form onSubmit={handleSubmit}>
-            <input
+            <TextField
+              label="Email"
               type="email"
               name="email"
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.email}
+              error={touched.email && Boolean(errors.email)}
+              helperText={touched.email && errors.email}
+              fullWidth
+              margin="normal"
             />
-            {errors.email && touched.email && errors.email}
-            <input
+            <TextField
+              label="Password"
               type="password"
               name="password"
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.password}
+              error={touched.password && Boolean(errors.password)}
+              helperText={touched.password && errors.password}
+              fullWidth
+              margin="normal"
             />
-            {errors.password && touched.password && errors.password}
-            <input
+            <TextField
+              label="Username"
               type="text"
               name="username"
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.username}
+              error={touched.username && Boolean(errors.username)}
+              helperText={touched.username && errors.username}
+              fullWidth
+              margin="normal"
             />
-            {errors.username && touched.username && errors.username}
-            <input
+            <TextField
+              label="First Name"
               type="text"
               name="firstName"
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.firstName}
+              error={touched.firstName && Boolean(errors.firstName)}
+              helperText={touched.firstName && errors.firstName}
+              fullWidth
+              margin="normal"
             />
-            {errors.firstName && touched.firstName && errors.firstName}
-            <input
+            <TextField
+              label="Last Name"
               type="text"
               name="lastName"
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.lastName}
+              error={touched.lastName && Boolean(errors.lastName)}
+              helperText={touched.lastName && errors.lastName}
+              fullWidth
+              margin="normal"
             />
-            {errors.lastName && touched.lastName && errors.lastName}
-            <button type="submit" disabled={isSubmitting}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={isSubmitting}
+              fullWidth
+              sx={{ mt: 2 }}
+            >
               Submit
-            </button>
+            </Button>
           </form>
         )}
       </Formik>

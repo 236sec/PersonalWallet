@@ -1,37 +1,33 @@
 "use client";
 import React from "react";
+import { TextField, Button } from "@mui/material";
 import { Formik } from "formik";
-import { getProfile, loginUser } from "@/app/services/UserService";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
+import { createWallet } from "@/app/services/WalletService";
 
 type Props = {};
 
-const RegisterPager = (props: Props) => {
+const CreateWallet = (props: Props) => {
   return (
     <div>
-      <h1>Login Page</h1>
+      <div></div>CreateWallet
       <Formik
         initialValues={{
-          email: "",
-          password: "",
+          name: "",
+          description: "",
+          type: "",
         }}
         validate={(values) => {
           const errors = {} as any;
-          if (!values.email) {
-            errors.email = "Required";
-          } else if (
-            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-          ) {
-            errors.email = "Invalid email address";
+          if (!values.name) {
+            errors.name = "Required";
           }
-          if (!values.password) {
-            errors.password = "Required";
+          if (!values.type) {
+            errors.type = "Required";
           }
           return errors;
         }}
         onSubmit={async (values, { setSubmitting }) => {
-          const data = await loginUser(values);
+          const data = await createWallet(values);
           console.log(data);
           if (!data) {
             alert("Failed");
@@ -52,32 +48,47 @@ const RegisterPager = (props: Props) => {
         }) => (
           <form onSubmit={handleSubmit}>
             <TextField
-              label="Email"
-              name="email"
-              type="email"
+              label="Name"
+              name="name"
+              type="text"
               variant="outlined"
               fullWidth
               margin="normal"
               onChange={handleChange}
               onBlur={handleBlur}
-              value={values.email}
-              error={touched.email && Boolean(errors.email)}
-              helperText={touched.email && errors.email ? errors.email : ""}
+              value={values.name}
+              error={touched.name && Boolean(errors.name)}
+              helperText={touched.name && errors.name ? errors.name : ""}
             />
             <TextField
-              label="Password"
-              name="password"
-              type="password"
+              label="Description"
+              name="description"
+              type="text"
               variant="outlined"
               fullWidth
               margin="normal"
               onChange={handleChange}
               onBlur={handleBlur}
-              value={values.password}
-              error={touched.password && Boolean(errors.password)}
+              value={values.description}
+              error={touched.description && Boolean(errors.description)}
               helperText={
-                touched.password && errors.password ? errors.password : ""
+                touched.description && errors.description
+                  ? errors.description
+                  : ""
               }
+            />
+            <TextField
+              label="Type"
+              name="type"
+              type="text"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.type}
+              error={touched.type && Boolean(errors.type)}
+              helperText={touched.type && errors.type ? errors.type : ""}
             />
             <Button
               type="submit"
@@ -98,10 +109,8 @@ const RegisterPager = (props: Props) => {
           </form>
         )}
       </Formik>
-
-      <Button onClick={async () => await getProfile()}>Hello</Button>
     </div>
   );
 };
 
-export default RegisterPager;
+export default CreateWallet;
