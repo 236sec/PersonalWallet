@@ -23,7 +23,10 @@ export class WalletsService {
   }
 
   findByOwnerId(ownerId: Types.ObjectId) {
-    return this.walletModel.find({ ownerId }).exec();
+    return this.walletModel
+      .find({ ownerId })
+      .populate('ownerId', 'username')
+      .exec();
   }
 
   findAll() {

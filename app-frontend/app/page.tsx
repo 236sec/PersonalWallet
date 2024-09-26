@@ -8,6 +8,8 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { getWallets } from "./services/WalletService";
+import TransactionForm from "./component/TransactionForm";
 
 interface Wallet {
   _id: string;
@@ -24,11 +26,7 @@ export default function Home() {
   };
 
   const fetchWallet = async () => {
-    const res = await fetch("http://localhost:3000/users/wallet", {
-      credentials: "include",
-    });
-    const data = await res.json();
-    console.log("Have wallet", data.length);
+    const data = await getWallets();
     setWallets(Array.isArray(data) ? data : []);
   };
 
@@ -47,6 +45,7 @@ export default function Home() {
       <Link href={"/createwallet"}>
         <Button variant="contained">Create Wallet</Button>
       </Link>
+      <TransactionForm walletId={selectedWallet} />
       <FormControl fullWidth>
         <InputLabel id="selectedWallet">Wallet</InputLabel>
         <Select

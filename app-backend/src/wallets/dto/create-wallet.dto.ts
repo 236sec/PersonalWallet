@@ -13,7 +13,7 @@ export class CreateWalletDto {
   description: string;
 
   @ApiProperty()
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   type: string;
 }
