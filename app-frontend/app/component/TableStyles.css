@@ -1,0 +1,9 @@
+.deposit-row {
+  background-color: green;
+  color: white; /* You can also set the text color if needed */
+}
+
+.withdraw-row {
+  background-color: red;
+  color: white;
+}

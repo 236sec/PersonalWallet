@@ -20,8 +20,21 @@ export async function createWallet({
   return result;
 }
 
-export async function getWallets() {
+export async function getWalletsList() {
   const res = await fetch(`${process.env.BASE_URL}/users/wallet`, {
+    headers: { "Content-Type": "application/json" },
+    method: "GET",
+    credentials: "include",
+  });
+  if (!res.ok) {
+    throw Error("Failed to Create Wallet");
+  }
+  const result = await res.json();
+  return result;
+}
+
+export async function getWallet(id: string) {
+  const res = await fetch(`${process.env.BASE_URL}/wallets/${id}`, {
     headers: { "Content-Type": "application/json" },
     method: "GET",
     credentials: "include",

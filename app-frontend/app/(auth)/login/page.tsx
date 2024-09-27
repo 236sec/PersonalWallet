@@ -4,10 +4,13 @@ import { Formik } from "formik";
 import { getProfile, loginUser } from "@/app/services/UserService";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-
+import { useRouter } from "next/navigation";
+import { useGlobalContext } from "@/app/context/GlobalProvider";
 type Props = {};
 
 const RegisterPager = (props: Props) => {
+  const router = useRouter();
+  const { setIsLogged } = useGlobalContext();
   return (
     <div>
       <h1>Login Page</h1>
@@ -32,11 +35,14 @@ const RegisterPager = (props: Props) => {
         }}
         onSubmit={async (values, { setSubmitting }) => {
           const data = await loginUser(values);
+
           console.log(data);
           if (!data) {
             alert("Failed");
           } else {
             alert("Success");
+            setIsLogged(true);
+            router.push("/");
           }
           setSubmitting(false);
         }}

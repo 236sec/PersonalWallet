@@ -16,11 +16,16 @@ import { Roles } from 'src/auth/roles/roles.decorator';
 import { Role } from 'src/users/entities/user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/auth/roles/role.guard';
-import { Types } from 'mongoose';
+import { ObjectId, Types } from 'mongoose';
+import { TransactionsService } from 'src/transactions/transactions.service';
+import { ParseObjectIdPipe } from 'src/common/pipe';
 
 @Controller('wallets')
 export class WalletsController {
-  constructor(private readonly walletsService: WalletsService) {}
+  constructor(
+    private readonly walletsService: WalletsService,
+    private readonly transactionsService: TransactionsService,
+  ) {}
 
   @Roles(Role.Customer)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -36,8 +41,11 @@ export class WalletsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.walletsService.findOne(+id);
+  async findOne(@Param('id', ParseObjectIdPipe) id: ObjectId) {
+    const wallet = await this.walletsService.findOne(id);
+    const transactionInfo =
+      await this.transactionsService.getTotalAmountGroupedByCoinAndType(id);
+    return { ...wallet, ...transactionInfo };
   }
 
   @Patch(':id')
@@ -48,5 +56,10 @@ export class WalletsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.walletsService.remove(+id);
+  }
+
+  @Get(':id/transactions')
+  getWallet(@Param('id', ParseObjectIdPipe) walletId: ObjectId) {
+    return this.transactionsService.getTransactions(walletId);
   }
 }

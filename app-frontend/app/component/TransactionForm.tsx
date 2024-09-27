@@ -50,6 +50,7 @@ class TransactionForm extends Component<Props, State> {
             alert("Failed");
           } else {
             alert("Success");
+            window.location.reload();
           }
           setSubmitting(false);
         }}

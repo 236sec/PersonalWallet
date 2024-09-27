@@ -26,8 +26,8 @@ export class TransactionsService {
     return createdWallet.save();
   }
 
-  getTransactions(walletId: Types.ObjectId): Promise<Transaction[]> {
-    const transactions = this.transactionModel.find({ walletId });
+  getTransactions(walletId: ObjectId): Promise<Transaction[]> {
+    const transactions = this.transactionModel.find({ walletId }).exec();
     return transactions;
   }
 
@@ -43,7 +43,36 @@ export class TransactionsService {
     return `This action updates a #${id} transaction`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} transaction`;
+  remove(id: ObjectId) {
+    return this.transactionModel.deleteOne({ _id: id }).exec();
+  }
+
+  async getTotalAmountGroupedByCoinAndType(walletId: ObjectId) {
+    const result = await this.transactionModel
+      .aggregate([
+        {
+          $match: { walletId: walletId }, // Filter by walletId
+        },
+        {
+          $group: {
+            _id: {
+              coinName: '$coinName',
+              type: '$type',
+            },
+            totalAmount: { $sum: '$amount' },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            coinName: '$_id.coinName',
+            type: '$_id.type',
+            totalAmount: 1,
+          },
+        },
+      ])
+      .exec();
+
+    return result;
   }
 }
