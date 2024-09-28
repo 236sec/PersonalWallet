@@ -10,6 +10,8 @@
 
 ![System Image](./images/system.png)
 
+#### Redis Using Write-through for cache data
+
 ## Er Diagram
 
 ![Er Image](./images/erdiagram.png)
