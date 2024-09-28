@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { Model, ObjectId, Types } from 'mongoose';
@@ -8,22 +8,31 @@ import {
 } from './entities/transaction.entity';
 import { plainToInstance } from 'class-transformer';
 import { InjectModel } from '@nestjs/mongoose';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class TransactionsService {
   constructor(
     @InjectModel(Transaction.name)
     private transactionModel: Model<TransactionDocument>,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
-  create(
+  async create(
     walletId: ObjectId,
     createTransactionDto: CreateTransactionDto,
   ): Promise<Transaction> {
     const newTransaction = plainToInstance(Transaction, createTransactionDto);
     newTransaction.walletId = walletId as any;
     const createdWallet = new this.transactionModel(newTransaction);
-    return createdWallet.save();
+    const result = await createdWallet.save();
+    const cTotal = await this.getTotalAmountGroupedByCoinAndType(
+      walletId,
+      false,
+    );
+    await this.cacheManager.set(`totalAmount${walletId}`, cTotal);
+    return result;
   }
 
   getTransactions(walletId: ObjectId): Promise<Transaction[]> {
@@ -47,7 +56,20 @@ export class TransactionsService {
     return this.transactionModel.deleteOne({ _id: id }).exec();
   }
 
-  async getTotalAmountGroupedByCoinAndType(walletId: ObjectId) {
+  async getTotalAmountGroupedByCoinAndType(
+    walletId: ObjectId,
+    checkCache: Boolean,
+  ) {
+    if (checkCache) {
+      const cdata = (await this.cacheManager.get(
+        `totalAmount${walletId}`,
+      )) as any;
+      console.log('Cache Data', cdata);
+      if (cdata) {
+        console.log('Return Cache Data');
+        return cdata;
+      }
+    }
     const result = await this.transactionModel
       .aggregate([
         {

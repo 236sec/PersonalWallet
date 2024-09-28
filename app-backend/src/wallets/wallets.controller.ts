@@ -44,7 +44,10 @@ export class WalletsController {
   async findOne(@Param('id', ParseObjectIdPipe) id: ObjectId) {
     const wallet = await this.walletsService.findOne(id);
     const transactionInfo =
-      await this.transactionsService.getTotalAmountGroupedByCoinAndType(id);
+      await this.transactionsService.getTotalAmountGroupedByCoinAndType(
+        id,
+        true,
+      );
     return { ...wallet, ...transactionInfo };
   }
 

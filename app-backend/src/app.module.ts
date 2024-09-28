@@ -8,6 +8,7 @@ import { AssetsModule } from './assets/assets.module';
 import { UsersModule } from './users/users.module';
 import { WalletsModule } from './wallets/wallets.module';
 import { TransactionsModule } from './transactions/transactions.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { TransactionsModule } from './transactions/transactions.module';
       }),
       inject: [ConfigService],
     }),
+    CacheModule.register({ isGlobal: true, ttl: 60000 }),
     AuthModule,
     AssetsModule,
     UsersModule,
