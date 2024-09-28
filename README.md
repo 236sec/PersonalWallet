@@ -14,7 +14,7 @@
 
 ![Er Image](./images/erdiagram.png)
 
-`
+```
 Table users {
 id varchar [primary key]
 email varchar
@@ -56,4 +56,4 @@ enum TransactionType {
 "Withdraw"
 "Deposit"
 }
-`
+```
